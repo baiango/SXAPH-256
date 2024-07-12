@@ -1,15 +1,23 @@
 # ✨ SXAPH-256 - Shift XOR Add Prime Hash 256-Bit
-This is an experimental hash function drop-in replacement made from brute-forcing every combination of operators `~, |, &, <<, >>, ^, +, and -`. I found out, `| and &` reduces hash distribution and `~` doesn't improve. SXAPH-256 is designed and trained for prime-sized HashMap. So, it'll perform much worse on non-prime-sized HashMap.
+This is an experimental hash function drop-in replacement made from brute-forcing every combination of operators `~, |, &, <<, >>, ^, +, and -`. I found out, `| and &` reduces hash distribution and `~` doesn't improve.
+
+`l`, `r`, `hash_256_a`, and `hash_256_b` from SXAPH-256 are generated with 2 PRNGs (random.randrange and np.random.randint), then run through the Chi² test with the password 4000 times, and filter out the best result. Yet, constants were manually picked due to how the hash function wasn't able to generalize outside its test.
+
+The Chi² test is vulnerable to guided optimization framework like Bayesian optimization from [Optuna](https://optuna.org/), but multiple bucket sizes are used to improve the hash's ability to generalize over different sized array; it's done on all system cores to ensure maximum core utilization. Previously, SXAPH-256 was brute-force optimized with [Optuna](https://optuna.org/), but it was using only half the performance of each core, and, Optuna wasn't more effective than PRNGs on `<<, >>, ^, +` optimizations for its overhead. But the current constants were found by [Optuna](https://optuna.org/) in 8 hours by some sort of luck. Now, its constants are brute-forced optimized on 2 PRNGs.
+
+SXAPH-256 is trained on passwords for prime-sized HashMap. So, it'll perform much worse on non-prime-sized HashMap.
+
+It was made in 2 days, I had previous experience implementing n-grams, BPE tokenizer, DCT-II, YCoCg, PRNGs, and some hash tests to make this hash function, it's mostly related to data compression and natural language processing. Which helped me to create my first highly achieved custom-made hash function from PRNG codes.
 
 # 🌟 Features
-- Hash 1.66x faster than with one SIMD multiply (`mul_hash`); it uses (1 Left shift, 1 right shift, 2 XOR, 1 Add)
+- Hash 1.66x faster than with one SIMD multiply (`mul_hash`); it uses (1 Left and 1 Right shift, 2 XOR, 1 Add)
 - Outperform hash distribution of SHA-256 with prime-sized array
 
 # ⛈️ Deal-breakers
 - Only works with 256-bit SIMD (AVX2)
 - Black-box hash function, with uninterpretable outputs
-- Extreme bug-prone when implementing as it is sensitive to number change or typos
-- Ineffective with non-prime sized tables
+- Extreme bug-prone when implementing as it is very sensitive to number change or typos
+- Ineffective with non-prime sized array
 
 # Original code (Python)
 ```py
@@ -116,6 +124,16 @@ def crc32_hash(input_data):
 
 def mul_hash(input_data, hash_256=np.array([140, 91, 171, 62], dtype=np.uint64)):
 	return hash_256 * input_data
+
+def fnv1a_32_hash(input_bytes):
+	hash_array = np.array([fnv1a_32(bytes(input_bytes))], dtype=np.uint32)
+	return hash_array
+
+def djb2_hash(input_bytes):
+	hash_value = np.uint32(5381)
+	for b in input_bytes:
+		hash_value = ((hash_value << np.uint32(5)) + hash_value) + b
+	return hash_value
 ```
 
 ## 🧮 Prime benchmark
@@ -134,7 +152,9 @@ Hash file = [conficker.txt](https://weakpass.com/wordlist/60)
 Running command:
 ```py
 print("test_hash_distribution(mul_hash): ", test_hash_distribution(mul_hash)) # 1237
+print("test_hash_distribution(djb2_hash): ", test_hash_distribution(djb2_hash)) # 8207
 print("test_hash_distribution(shift_xor_add_impl): ", test_hash_distribution(shift_xor_add_impl)) # 223
+print("test_hash_distribution(fnv1a_32_hash): ", test_hash_distribution(fnv1a_32_hash)) # 683
 print("test_hash_distribution(crc32_hash):" , test_hash_distribution(crc32_hash)) # 695
 print("test_hash_distribution(sha256_hash):" , test_hash_distribution(sha256_hash)) # 793
 ```
