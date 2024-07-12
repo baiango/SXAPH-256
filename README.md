@@ -1,5 +1,5 @@
 # ✨ SXAPH-256 - Shift XOR Add Prime Hash 256-Bit
-This is an experimental hash function drop-in replacement made from brute-forcing every combination of operators `~, |, &, <<, >>, ^, +, and -`. I found out, `| and &` reduces hash distribution and `~` doesn't improve. SXAPH-256 is designed and trained for prime-sized HashMap. So, it'll perform worse on non-prime-sized HashMap.
+This is an experimental hash function drop-in replacement made from brute-forcing every combination of operators `~, |, &, <<, >>, ^, +, and -`. I found out, `| and &` reduces hash distribution and `~` doesn't improve. SXAPH-256 is designed and trained for prime-sized HashMap. So, it'll perform much worse on non-prime-sized HashMap.
 
 # 🌟 Features
 - Hash 1.66x faster than with one SIMD multiply (`mul_hash`); it uses (1 Left shift, 1 right shift, 2 XOR, 1 Add)
@@ -7,7 +7,9 @@ This is an experimental hash function drop-in replacement made from brute-forcin
 
 # ⛈️ Deal-breakers
 - Only works with 256-bit SIMD (AVX2)
-- Uninterpretable output
+- Black-box hash function, with uninterpretable outputs
+- Extreme bug-prone when implementing as it is sensitive to number change or typos
+- Ineffective with non-prime sized tables
 
 # Original code (Python)
 ```py
@@ -122,8 +124,10 @@ Hash file = [conficker.txt](https://weakpass.com/wordlist/60)
 
 | Hash name       | Non-uniform score |
 |-----------------|-------------------|
-| mul_hash        | 1237              |
+| djb2_hash       | 8,207             |
+| mul_hash        | 1,237             |
 | shift_xor_add_impl | 223            |
+| fnv1a_32_hash   | 683               |
 | crc32_hash      | 695               |
 | sha256_hash     | 793               |
 
@@ -140,10 +144,12 @@ Hash file = [BruteX_password.list](https://weakpass.com/wordlist/1902)
 
 | Hash name       | Non-uniform score |
 |-----------------|-------------------|
-| mul_hash        | 20222418          |
-| shift_xor_add_hash | 78718          |
-| crc32_hash      | 93790             |
-| sha256_hash     | 79962             |
+| mul_hash        | 20,222,418        |
+| djb2_hash       | 8,870,738         |
+| shift_xor_add_hash | 78,718         |
+| fnv1a_32_hash_hash | 86,620         |
+| crc32_hash      | 93,790            |
+| sha256_hash     | 79,962            |
 
 Running command:
 ```py
@@ -155,10 +161,12 @@ chi2_benchmark()
 Hash file = [BruteX_password.list](https://weakpass.com/wordlist/1902)  
 | Hash name       | Non-uniform score |
 |-----------------|-------------------|
-| mul_hash        | 144201418         |
-| shift_xor_add_hash | 1815780        |
-| crc32_hash      | 399244            |
-| sha256_hash     | 316864            |
+| mul_hash        | 144,201,418       |
+| djb2_hash       | 57,182,530        |
+| shift_xor_add_hash | 1,815,780      |
+| fnv1a_32_hash_hash | 377,188        |
+| crc32_hash      | 399,244           |
+| sha256_hash     | 316,864           |
 
 Running command:
 ```py
