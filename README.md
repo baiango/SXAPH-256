@@ -10,16 +10,17 @@ SXAPH-256 is trained on passwords for prime-sized HashMap. So, it'll perform muc
 It was made in 2 days, I had previous experience implementing n-grams, BPE tokenizer, DCT-II, YCoCg, PRNGs, and some hash tests to make this hash function, it's mostly related to data compression and natural language processing. Which helped me to create my first highly achieved custom-made hash function from PRNG codes.
 
 # 🌟 Features
-- Hash 1.66x faster than with one SIMD multiply (`mul_hash`); it uses (1 Left and 1 Right shift, 2 XOR, 1 Add)
-- Outperform hash distribution of SHA-256 with prime-sized array
+- Hash as fast as one SIMD multiply (`mul_hash`); it uses (1 Left and 1 Right shift, 2 XOR, 1 Add)
+- Mostly outperform hash distribution of SHA-256 when on prime-sized array
 
 # ⛈️ Deal-breakers
 - Only works with 256-bit SIMD (AVX2)
-- Black-box hash function, with uninterpretable outputs
-- Extreme bug-prone when implementing as it is very sensitive to number change or typos
-- Ineffective with non-prime sized array
+- Gray-box hash function, with uninterpretable outputs
+- Extreme bug-prone when implementing as it is very sensitive to typos
+- Ineffective with non-prime sized array (But more uniform than `mul_hash` and `djb2`)
+- Weak diffusion
 
-# Original code (Python)
+# 🐍 Original code (Python)
 ```py
 def shift_xor_add_impl(input_data, l=31, r=24, hash_256_a=np.array([10449833687391262720, 12708638996869552128, 12083284059032971264, 5098133568216696832], dtype=np.uint64), hash_256_b=np.array([9858113524293627904, 2849775663957600256, 12247827806936932352, 1651210329918801920], dtype=np.uint64)):
 	ls_dat = np.left_shift(input_data, l)
@@ -29,7 +30,7 @@ def shift_xor_add_impl(input_data, l=31, r=24, hash_256_a=np.array([104498336873
 	return np.add(hash_256_a, hash_256_b)
 ```
 
-## [Rust port](https://godbolt.org/#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,fontUsePx:'0',j:1,lang:rust,selection:(endColumn:1,endLineNumber:18,positionColumn:1,positionLineNumber:18,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:'%23!!%5Bfeature(portable_simd)%5D%0Ause+std::simd::u64x4%3B%0A%0A%23%5Bno_mangle%5D%0Apub+fn+shift_xor_add_impl(input_data:+u64x4)+-%3E+u64x4+%7B%0A++++let+ls_dat+%3D+input_data+%3C%3C+u64x4::splat(31)%3B%0A++++let+hash_256_a+%3D+ls_dat+%5E+u64x4::from_array(%5B10449833687391262720,+12708638996869552128,+12083284059032971264,+5098133568216696832%5D)%3B%0A++++let+rs_dat+%3D+input_data+%3E%3E+u64x4::splat(24)%3B%0A++++let+hash_256_b+%3D+rs_dat+%5E+u64x4::from_array(%5B9858113524293627904,+2849775663957600256,+12247827806936932352,+1651210329918801920%5D)%3B%0A++++hash_256_a+%2B+hash_256_b%0A%7D%0A%0Afn+main()+%7B%0A++++let+input_data+%3D+u64x4::splat(123)%3B%0A++++let+result+%3D+shift_xor_add_impl(input_data)%3B%0A++++assert_eq!!(result,+u64x4::from_array(%5B1861203148712757248,+15558414740284047360,+5884367880307181568,+6749343681239650304%5D))%3B%0A%7D%0A'),l:'5',n:'1',o:'Rust+source+%231',t:'0')),k:33.333333333333336,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:nightly,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'0',intel:'0',libraryCode:'1',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:rust,libs:!(),options:'-C+opt-level%3D2+-C+target-feature%3D%2Bavx2,%2Bfma',overrides:!(),selection:(endColumn:12,endLineNumber:21,positionColumn:1,positionLineNumber:1,selectionStartColumn:12,selectionStartLineNumber:21,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+rustc+nightly+(Editor+%231)',t:'0')),k:33.31475057813016,l:'4',m:100,n:'0',o:'',s:0,t:'0'),(g:!((h:output,i:(compilerName:'x86-64+gcc+14.1',editorid:1,fontScale:14,fontUsePx:'0',j:1,wrap:'1'),l:'5',n:'0',o:'Output+of+rustc+nightly+(Compiler+%231)',t:'0')),k:33.351916088536505,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),version:4)
+## 🔩 [Rust port](https://godbolt.org/#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,fontUsePx:'0',j:1,lang:rust,selection:(endColumn:1,endLineNumber:18,positionColumn:1,positionLineNumber:18,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:'%23!!%5Bfeature(portable_simd)%5D%0Ause+std::simd::u64x4%3B%0A%0A%23%5Bno_mangle%5D%0Apub+fn+shift_xor_add_impl(input_data:+u64x4)+-%3E+u64x4+%7B%0A++++let+ls_dat+%3D+input_data+%3C%3C+u64x4::splat(31)%3B%0A++++let+hash_256_a+%3D+ls_dat+%5E+u64x4::from_array(%5B10449833687391262720,+12708638996869552128,+12083284059032971264,+5098133568216696832%5D)%3B%0A++++let+rs_dat+%3D+input_data+%3E%3E+u64x4::splat(24)%3B%0A++++let+hash_256_b+%3D+rs_dat+%5E+u64x4::from_array(%5B9858113524293627904,+2849775663957600256,+12247827806936932352,+1651210329918801920%5D)%3B%0A++++hash_256_a+%2B+hash_256_b%0A%7D%0A%0Afn+main()+%7B%0A++++let+input_data+%3D+u64x4::splat(123)%3B%0A++++let+result+%3D+shift_xor_add_impl(input_data)%3B%0A++++assert_eq!!(result,+u64x4::from_array(%5B1861203148712757248,+15558414740284047360,+5884367880307181568,+6749343681239650304%5D))%3B%0A%7D%0A'),l:'5',n:'1',o:'Rust+source+%231',t:'0')),k:33.333333333333336,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:nightly,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'0',intel:'0',libraryCode:'1',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:rust,libs:!(),options:'-C+opt-level%3D2+-C+target-feature%3D%2Bavx2,%2Bfma',overrides:!(),selection:(endColumn:12,endLineNumber:21,positionColumn:1,positionLineNumber:1,selectionStartColumn:12,selectionStartLineNumber:21,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+rustc+nightly+(Editor+%231)',t:'0')),k:33.31475057813016,l:'4',m:100,n:'0',o:'',s:0,t:'0'),(g:!((h:output,i:(compilerName:'x86-64+gcc+14.1',editorid:1,fontScale:14,fontUsePx:'0',j:1,wrap:'1'),l:'5',n:'0',o:'Output+of+rustc+nightly+(Compiler+%231)',t:'0')),k:33.351916088536505,l:'4',m:100,n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),version:4)
 ```rs
 #![feature(portable_simd)]
 use std::simd::u64x4;
@@ -49,7 +50,7 @@ fn main() {
 	assert_eq!(result, u64x4::from_array([1861203148712757248, 15558414740284047360, 5884367880307181568, 6749343681239650304]));
 }
 ```
-## ASM output from Rust port
+## 🍪 ASM output from Rust port
 ```asm
 .LCPI0_0:
 		.quad   -7996910386318288896
@@ -73,6 +74,29 @@ shift_xor_add_impl:
 		vzeroupper
 		ret
 ```
+
+# ⏩🚀 Hashing Performance
+This is tested with i5-9300H CPU. The speed will be different from different CPUs.
+## 🥟 8-bit (small) hash
+| CPU      | Bench name           | Time      |
+|----------|----------------------|-----------|
+| i5-9300H | mul_hash_8           | 1.3768 ns |
+|          | djb2_hash_8          | 1.7855 ns |
+|          | shift_xor_add_hash_8 | 1.3313 ns |
+## 🍔 256-bit (standard) hash
+| CPU      | Bench name             | Time      |
+|----------|------------------------|-----------|
+| i5-9300H | mul_hash_256           | 1.3536 ns |
+|          | djb2_hash_256          | 6.7753 ns |
+|          | shift_xor_add_hash_256 | 1.3313 ns |
+
+Running command:
+```py
+cargo bench
+```
+
+## Why SXAPH-256 is faster than djb2❔
+Because it doesn't handle loops, unlike djb2 does. So the Rust compiler can't unroll the loop to slow down on small input. But the tradeoff is the caller must manually loop over `shift_xor_add_hash`.
 
 # 🚄🔥 Chi² benchmark (Lower gives better distribution)
 `test_hash_distribution()` tests the distribution of hash values generated by a given function for a set of input data. It calculates the chi-squared statistic to measure the deviation of the observed hash distribution from the expected uniform distribution.
@@ -132,13 +156,14 @@ def fnv1a_32_hash(input_bytes):
 def djb2_hash(input_bytes):
 	hash_value = np.uint32(5381)
 	for b in input_bytes:
-		hash_value = ((hash_value << np.uint32(5)) + hash_value) + b
+		hash_value = hash_value * np.uint32(33) + b
 	return hash_value
 ```
 
 ## 🧮 Prime benchmark
 ### Bucket sizes = `[11, 13, 17, 19]`  
 Hash file = [conficker.txt](https://weakpass.com/wordlist/60)  
+ℹ️ Disclosure: `shift_xor_add_impl` were trained on the same file and bucket sizes as above.  
 
 | Hash name       | Non-uniform score |
 |-----------------|-------------------|

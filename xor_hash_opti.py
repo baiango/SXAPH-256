@@ -121,7 +121,7 @@ def fnv1a_32_hash(input_bytes):
 def djb2_hash(input_bytes):
 	hash_value = np.uint32(5381)
 	for b in input_bytes:
-		hash_value = ((hash_value << np.uint32(5)) + hash_value) + b
+		hash_value = hash_value * np.uint32(33) + b
 	return hash_value
 
 def mul_hash(input_data, hash_256=np.array([140, 91, 171, 62], dtype=np.uint64)):
