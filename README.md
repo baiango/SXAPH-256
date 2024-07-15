@@ -128,22 +128,22 @@ vast_hash_impl:
 		.quad   1954899363002243873
 		.quad   -8518465452581881469
 vast_hash:
-		test    rsi, rsi
-		je      .LBB1_1
-		shl     rsi, 5
-		vpxor   xmm0, xmm0, xmm0
-		xor     eax, eax
-		vmovdqa ymm1, ymmword ptr [rip + .LCPI1_0]
+		test    rsi, rsi ; if input_data.len() == 0
+		je      .LBB1_1 ; Return u64x4::splat(0)
+		shl     rsi, 5 ; input_data.len() * 32
+		vpxor   xmm0, xmm0, xmm0 ; hash = u64x4::splat(0)
+		xor     eax, eax ; `dat` in input_data
+		vmovdqa ymm1, ymmword ptr [rip + .LCPI1_0] ; XOR constants
 .LBB1_4:
-		vpxor   ymm2, ymm1, ymmword ptr [rdi + rax]
-		vpaddq  ymm0, ymm2, ymm0
-		add     rax, 32
-		cmp     rsi, rax
-		jne     .LBB1_4
-		jmp     .LBB1_2
+		vpxor   ymm2, ymm1, ymmword ptr [rdi + rax] ; Position of input_data
+		vpaddq  ymm0, ymm2, ymm0 ; Add to `hash`
+		add     rax, 32 ; Current index
+		cmp     rsi, rax ; Check if finished
+		jne     .LBB1_4 ; Loop back
+		jmp     .LBB1_2 ; Return block
 .LBB1_1:
-		vpxor   xmm0, xmm0, xmm0
-.LBB1_2:
+		vpxor   xmm0, xmm0, xmm0 ; hash = u64x4::splat(0)
+.LBB1_2: ; `sum_u64x4_icx()` inlined
 		vextracti128    xmm1, ymm0, 1
 		vpaddq  xmm0, xmm1, xmm0
 		vpshufd xmm1, xmm0, 238
