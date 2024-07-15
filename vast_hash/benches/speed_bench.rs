@@ -35,9 +35,9 @@ fn bench_djb2_hash_256(c: &mut Criterion) {
 	c.bench_function("djb2_hash_256", |b| b.iter(|| djb2_hash(black_box(input_data))));
 }
 
-fn bench_vast_impl_256(c: &mut Criterion) {
+fn bench_vast_hash_impl_256(c: &mut Criterion) {
 	let input_data = u64x4::splat(0x123456789abcdef0);
-	c.bench_function("vast_impl_256", |b| b.iter(|| vast_hash_impl(black_box(input_data))));
+	c.bench_function("vast_hash_impl_256", |b| b.iter(|| vast_hash_impl(black_box(input_data))));
 }
 
 fn bench_fnv_1a_hash_256(c: &mut Criterion) {
@@ -81,7 +81,7 @@ fn bench_sum_u64x4_icx(c: &mut Criterion) {
 criterion_group!(
 	benches,
 	bench_mul_hash_impl_8, bench_djb2_hash_8, bench_vast_impl_8, bench_fnv_1a_hash_8, // 🥟 8-bit (small) hash
-	bench_mul_hash_impl_256, bench_djb2_hash_256, bench_vast_impl_256, bench_fnv_1a_hash_256, // 🍔 256-bit (standard) hash
+	bench_mul_hash_impl_256, bench_djb2_hash_256, bench_vast_hash_impl_256, bench_fnv_1a_hash_256, // 🍔 256-bit (standard) hash
 	bench_mul_hash_1mib, bench_djb2_hash_1mib, bench_vast_hash_1mib, bench_fnv_1a_hash_1mib, // 🍉 1 MiB (MP3) hash
 	bench_sum_u64x4_scalar, bench_sum_u64x4_icx // 📄 Miscellaneous
 );

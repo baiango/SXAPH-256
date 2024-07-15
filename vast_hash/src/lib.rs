@@ -92,10 +92,10 @@ mod tests {
 		let simd = u64x4::from_array([5, 6, 7, 8]);
 		assert_eq!(sum_u64x4_icx(simd), sum_u64x4_scalar(simd));
 
-		let simd = u64x4::from_array([0, 0, 0, 0]);
+		let simd = u64x4::splat(0);
 		assert_eq!(sum_u64x4_icx(simd), sum_u64x4_scalar(simd));
 
-		let simd = u64x4::from_array([u64::MAX, u64::MAX, u64::MAX, u64::MAX]);
+		let simd = u64x4::splat(u64::MAX);
 		assert_eq!(sum_u64x4_icx(simd), sum_u64x4_scalar(simd));
 	}
 }
