@@ -194,7 +194,7 @@ Hash file = [rockyou-65.txt](https://weakpass.com/wordlist/87)
 |-----------------|-------------------|
 | mul_hash        | 986,582,602       |
 | djb2_hash       | 349,747,618       |
-| shift_xor_add_hash | 732,138        |
+| vast_hash       | 732,138           |
 | fnv1a_32_hash   | 923,010           |
 | crc32_hash      | 739,366           |
 | sha256_hash     | 771,564           |
@@ -211,7 +211,7 @@ Hash file = [BruteX_password.list](https://weakpass.com/wordlist/1902)
 |-----------------|-------------------|
 | mul_hash        | 144,201,418       |
 | djb2_hash       | 57,182,530        |
-| shift_xor_add_hash | 1,956,106      |
+| vast_hash       | 1,956,106         |
 | fnv1a_32_hash   | 377,188           |
 | crc32_hash      | 399,244           |
 | sha256_hash     | 316,864           |
