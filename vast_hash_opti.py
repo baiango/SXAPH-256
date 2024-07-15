@@ -49,6 +49,9 @@ def generate_operator():
 def vast_hash_impl(input_data, hash_256=np.array([6205865627071447409, 2067898264094941423, 1954899363002243873, 9928278621127670147], dtype=np.uint64)):
 	return np.bitwise_xor(input_data, hash_256)
 
+def vast_hash(input_data):
+	return np.sum([vast_hash_impl(dat) for dat in input_data])
+
 def load_test(hash_file='conficker.txt'):
 	chunks = []
 	with open(hash_file, 'rb') as f:
@@ -89,7 +92,7 @@ def objective(bucket_sizes=[i for i in range(10, 20) if is_prime(i)]):
 
 	return {"best_params": {"hash_256": hash_256.tolist()}, "best_value": chi_squared}
 
-def brute_search_hash_func(jsonl_output_path='xor_hash_opti.jsonl'):
+def brute_search_hash_func(jsonl_output_path='vast_hash_opti.jsonl'):
 	best = {"best_params": {}, "best_value": np.iinfo(np.uint64).max}
 
 	results = []
@@ -167,6 +170,7 @@ def chi2_benchmark(bucket_sizes=[i for i in range(1, 101) if is_prime(i)], hash_
 
 if __name__ == '__main__':
 	assert vast_hash_impl(np.array([123, 123, 123, 123], dtype=np.uint64)).all() == np.array([6205865627071447306, 2067898264094941332, 1954899363002243930, 9928278621127670264], dtype=np.uint64).all()
+	assert vast_hash(np.array([[123, 123, 123, 123], [123, 123, 123, 123]], dtype=np.uint64)) == 3420395603173502432
 
 	chi2_benchmark(bucket_sizes=[11, 13, 17, 19], hash_path='conficker.txt')
 	print()

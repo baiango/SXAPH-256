@@ -1,0 +1,11 @@
+[package]
+name = "vast_hash"
+version = "0.1.0"
+edition = "2021"
+
+[dev-dependencies]
+criterion = { version = "0.5.1", features = ["html_reports"] }
+
+[[bench]]
+name = "speed_bench"
+harness = false

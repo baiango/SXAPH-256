@@ -16,7 +16,7 @@ Previously, VastHash was brute-force optimized with [Optuna](https://optuna.org/
 Current constants are found by SymPy, then converted to Rust code, and reverse engineered from Rust compiler's x86 ASM output.
 
 # 🌟 Features
-- Hash 8% faster than a SIMD multiply (`mul_hash`)
+- Hash 65% faster than a SIMD multiply (`mul_hash`)
 - Outperforms hash distribution of `djb2`; SHA-256 when on prime-sized array
 - Reduced data race (Doesn't rely on the same previous state except when summing)
 
@@ -36,23 +36,75 @@ import numpy as np
 def vast_hash_impl(input_data, hash_256=np.array([6205865627071447409, 2067898264094941423, 1954899363002243873, 9928278621127670147], dtype=np.uint64)):
 	return np.bitwise_xor(input_data, hash_256)
 
+def vast_hash(input_data):
+	return np.sum([vast_hash_impl(dat) for dat in input_data])
+
 assert vast_hash_impl(np.array([123, 123, 123, 123], dtype=np.uint64)).all() == np.array([6205865627071447306, 2067898264094941332, 1954899363002243930, 9928278621127670264], dtype=np.uint64).all()
+assert vast_hash(np.array([[123, 123, 123, 123], [123, 123, 123, 123]], dtype=np.uint64)) == 3420395603173502432
 ```
 
-## 🔩 [Rust port](https://godbolt.org/#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:14,fontUsePx:'0',j:1,lang:rust,selection:(endColumn:1,endLineNumber:14,positionColumn:1,positionLineNumber:14,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:'%23!!%5Bfeature(portable_simd)%5D%0Ause+std::simd::u64x4%3B%0A%0A%23%5Bno_mangle%5D%0Apub+fn+vast_hash_impl(input_data:+u64x4)+-%3E+u64x4+%7B%0A%09input_data+%5E+u64x4::from_array(%5B6205865627071447409,+2067898264094941423,+1954899363002243873,+9928278621127670147%5D)%0A%7D%0A%0Afn+main()+%7B%0A%09let+input_data+%3D+u64x4::splat(123)%3B%0A%09let+result+%3D+vast_hash_impl(input_data)%3B%0A%09assert_eq!!(result,+u64x4::from_array(%5B6205865627071447306,+2067898264094941332,+1954899363002243930,+9928278621127670264%5D))%3B%0A%7D%0A'),l:'5',n:'1',o:'Rust+source+%231',t:'0')),k:46.705949673462854,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:nightly,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'0',intel:'0',libraryCode:'1',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:rust,libs:!(),options:'-C+opt-level%3D2+-C+target-feature%3D%2Bavx2',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+rustc+nightly+(Editor+%231)',t:'0')),k:28.298696015337942,l:'4',m:100,n:'0',o:'',s:0,t:'0'),(g:!((h:output,i:(compilerName:'x86-64+gcc+14.1',editorid:1,fontScale:14,fontUsePx:'0',j:1,wrap:'1'),l:'5',n:'0',o:'Output+of+rustc+nightly+(Compiler+%231)',t:'0')),header:(),k:24.995354311199208,l:'4',n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),version:4)
+## 🔩 [Rust port](https://godbolt.org/#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAMzwBtMA7AQwFtMQByARg9KtQYEAysib0QXACx8BBAKoBnTAAUAHpwAMvAFYTStJg1DEArgoKkl9ZATwDKjdAGFUtEywYgATKUcAZPAZMADl3ACNMYhAANi5SAAdUBUI7Bhc3D28EpJSBAKDQlgio2MtMa1sBIQImYgJ09084q0wbVOragnyQ8Mi9c06GzOaauu7C4okASktUE2Jkdg4AUi8AZjAwZYBWACEqTCYCecwIRLqmMPoAfWSWdCmdgBFljQBBM0wAanN0EBA7n8QCZopJVJJlmtdq8PkofgQgbVkEgQKoABzRa6g/7LADsu2uLBY11oqCY6BMtzwXC8aNIX0JxPJ6GumHieFB9MZtwQJioVBubLwax8DKJ12QADcCMkaWiqaC8S8oTDPvCgWwWJDoe8Yas1jtdgxUITDMB6M89etDYFaIFMM8vgB6J1fABKmApiwUXwMBEYyAAnjD4iYwl8qAwvpKmOZrghYwhrngWPFaBBAqGCNd0EcmCAviCwZIpl8ALSQ7CF0Hgr54nVvV4ATkzJmzuZqde2VaL4P%2BVGIqCZxGITEDEEN0S8Gm2GO2U9xGlxUkkuMkGib9On0VxaKbaK8oI3kibkik63pXCb20ke6ba2iaw0Gi8XkkazRuLW9KbTdpXl3KcuBpXEdw0KRcWeR5dVxF5dV1a09mNU0jAtbY4LeUNw0jaNY2zBMFAQDMGCzHM8wLVZokNXsIXQ0sKzWHtQTrfE9Q3egCC%2BFg2y%2BAiEDrNYnmrYt/gUNMjggDRHhVeCm34Ygvg7L5AmUki2zImoADpCEiCBS3rNim2bPi6y8aFBNwuM%2BOTVN0wAKg7aSG2bJVDIUdxrho5NkFUCA%2BOgxtYLYxtEKNE0WDNNCMKwiMo3c4kvIUUQDGICBAQLGj6MrYSWOc9jME42ooi7XYi21L5aKEyEhJMBgFCYA5cvVf5NX%2BAhRzq7j/TSlMHhY5U8qbIrDQ0Z5NIAd1HeJ2SMa5mQgYa9i4MbJqYabAmAOb0HQBaR0NLwoImqaZs2%2BbFt2A06IC1z4JCy6wpQ80HXQq17tte1HRdL5dlqcpAwjPDIi%2BAgEyjEHviSsRamjSJkgEEMw1in4PK8vAfJ6%2B4MprEty2yotcsMjiviKii9jKqEKsdarCzqhrvnrLjMBYNqOoULrTkBfSgpkxt8s4yUuAEmracahnuVJclKVlWlduITTY2ueJ2r04mfTstA6s464uYGwmCujLwhZp%2BrRfxMViQlikqTlKAivlhRFeVqZ5e2iAvCmUtYy%2BdWBHMBkde1PX%2BbWI3apN%2Bmze5ZlWXZUEIAF%2BlJXd/rA9konJUkUORYj3ZzZ5PkBUwGPhS8ePvy%2BDQwmArhwOAqSU4pr6y/pfb6XL0VLqea6%2BejbYs/Dpqo%2B24u48lcuM4DnnmzDunB/FKUZWpWkFUkePtk9n18ZuwKMIR7CowiwIVYM2SGa%2BmMrMTGy00M5sidbds81D7HRPEggIBpNYnNvnviEwdzaCcWphffCV8UxpmIqRDsTBv6nw3LGJQdRWQAEdNgQD/gAiwwk%2BwgAHEOOaI4xwTj2FOGcc4FxLhXF%2BDQ0Qtw0N3PuQ865Tyni4GsEUl5ry3l/A%2BJ8L43xrHvBoH8f4DyAS8MBACYEmFQVgbzIyQUzbnzwvGRMP8mz3zUo/TswDWibGoi/AEb8P7rBmNgyQr8/QmK/paKeG4776wwSYQBRsQGqMIhOQ8D8NIwNTvI5sCDIjZkwKgyATjAFt0kNOQR84NBrC4F%2BbYL53zuz8S5RRucvrxU8tjbyqh1FE0BM/ESuDBzDlHOOQ0cQvgd3pJVORLl4EKEQcE0JaUUa5LRr5Tm9JsmJWSrUDGDwGlwI0frIp1MaL9jKQQipxDdjbHpLQr4uJ6Roigmk%2BxTSWkoLQX0zp6MenIwSrkyGKUhke02f4nuEyLJTNKfgoqRCRr0mERXV5Gy7FGW2UE3ZkB9nFjyRc3pHTAVnMGZzEZ1yxmcVuTVQxeDynPLJtiEAABZN4AANekRZ/gYuxcJPFWKcWovxZ8waATmm/JCXs0F4IgVHIBfS8FqVIWbIUbvWCHAZi0E4NsXgnhuC8FQJwN0ZhYVzAWPTdYPBSAEE0NymYABrEA2wmyaWiVOaIB4mw0LfLQ3lHBJACoVaQEVHBeAKBAMI%2BVHAtAzDgLAJAaBUx0EiOQSgLr2T0CiAwPAwAEAEFoIGPgdB/TECtRAMIpqwiBFqIGTgsrY3MGIIGAA8mEbQrRbWypdWwQQaaGDBtNVgMIJhgBODELQK1QrSBYAiqhJYWg614D/m0SU/9TWYFUK0NsTbeCBH9Ia5tdowijlTS4LAibeDtRTNO0gHbiBhCSJgJ4TNIobQVTMAUTBgAKAAGp4EwONNN8RGDzv4IIEQYh2BSBkIIRQKh1B2p0HoAwRgQCmHMPoPAYQrWQBmKgJWqQa1licF8IDBAyz0A7bQaqhswPA1qMAAqZYDhHBONVVYP1JSqC8MKxdxA8BYH/XpMoFRUgOAYM4VwjQ9D%2BHtBMPocREjJEqGkWjwxshsdSOMXoURmjlGze0UY9RONNHI8Jqoom%2BNFGY5YUTQwJMDDGIx/j0xZjzEWBpw1/LSCCubear4X6CDIC%2BH6gNQb/oQFwIQEgpl4lTBnVu0gfkQBzAIFmD1EAvVuuIMEVgSx0TRDLMxYAyAzNSE0rKz0dmiN/DiJe4QyVb3SCS4%2BtQprdBxFWvEadPK%2BUmpfWazgaa2xZgg1QYz4qzMWcDcGr4EAXCup9Q5rgTm5VbuVSAdcmlcRNkfF%2BBJG41i4hvPoTgxrSDMxrsIgzwrOCWr0La%2B1BWOD4f06a81zmX0ewXbDSjkggA%3D%3D)
 ```rs
 #![feature(portable_simd)]
 use std::simd::u64x4;
+use std::arch::x86_64::{_mm_loadu_si128, _mm_add_epi64, _mm_shuffle_epi32, _mm_cvtsi128_si64};
+use std::mem;
 
 #[no_mangle]
+#[inline] // Reduces latency
 pub fn vast_hash_impl(input_data: u64x4) -> u64x4 {
 	input_data ^ u64x4::from_array([6205865627071447409, 2067898264094941423, 1954899363002243873, 9928278621127670147])
 }
 
-fn main() {
-	let input_data = u64x4::splat(123);
-	let result = vast_hash_impl(input_data);
-	assert_eq!(result, u64x4::from_array([6205865627071447306, 2067898264094941332, 1954899363002243930, 9928278621127670264]));
+#[no_mangle]
+pub fn vast_hash(input_data: &[u64x4]) -> u64 {
+	let mut hash = u64x4::splat(0);
+	for dat in input_data.iter() {
+		hash += vast_hash_impl(*dat);
+	}
+	sum_u64x4_icx(hash)
+}
+
+#[no_mangle]
+pub fn sum_u64x4_scalar(simd: u64x4) -> u64 {
+	let arr: [u64; 4] = unsafe { std::mem::transmute(simd) };
+	arr[0].wrapping_add(arr[1].wrapping_add(arr[2]).wrapping_add(arr[3]))
+}
+
+#[no_mangle]
+#[inline] // Same speed as the scalar version
+pub fn sum_u64x4_icx(simd: u64x4) -> u64 {
+	let arr: [u64; 4] = unsafe { mem::transmute(simd) };
+	let v1 = unsafe { _mm_loadu_si128(arr.as_ptr() as *const _) };
+	let v2 = unsafe { _mm_loadu_si128((arr.as_ptr().add(2)) as *const _) };
+	let v3 = unsafe { _mm_add_epi64(v1, v2) };
+	let v4 = unsafe { _mm_shuffle_epi32(v3, 0b11101110) }; // (v3, [2, 3, 2, 3])
+	let v5 = unsafe { _mm_add_epi64(v3, v4) };
+	unsafe { _mm_cvtsi128_si64(v5) as u64 }
+}
+
+pub fn main() {
+	{ // vast_hash_impl
+		let input_data = u64x4::splat(123);
+		let result = vast_hash_impl(input_data);
+		assert_eq!(result, u64x4::from_array([6205865627071447306, 2067898264094941332, 1954899363002243930, 9928278621127670264]));
+	}{ // vast_hash
+		let input_data = vec![u64x4::splat(123), u64x4::splat(123)];
+		let result = vast_hash(&input_data);
+		assert_eq!(result, 3420395603173502432);
+	}{ // sum_u64x4_icx
+		let simd = u64x4::from_array([1, 2, 3, 4]);
+		assert_eq!(sum_u64x4_icx(simd), sum_u64x4_scalar(simd));
+
+		let simd = u64x4::from_array([5, 6, 7, 8]);
+		assert_eq!(sum_u64x4_icx(simd), sum_u64x4_scalar(simd));
+
+		let simd = u64x4::from_array([0, 0, 0, 0]);
+		assert_eq!(sum_u64x4_icx(simd), sum_u64x4_scalar(simd));
+
+		let simd = u64x4::from_array([u64::MAX, u64::MAX, u64::MAX, u64::MAX]);
+		assert_eq!(sum_u64x4_icx(simd), sum_u64x4_scalar(simd));
+	}
 }
 ```
 ## 🍪 ASM output from Rust port
@@ -69,24 +121,89 @@ vast_hash_impl:
 		vmovaps ymmword ptr [rdi], ymm0
 		vzeroupper
 		ret
+
+.LCPI1_0:
+		.quad   6205865627071447409
+		.quad   2067898264094941423
+		.quad   1954899363002243873
+		.quad   -8518465452581881469
+vast_hash:
+		test    rsi, rsi
+		je      .LBB1_1
+		shl     rsi, 5
+		vpxor   xmm0, xmm0, xmm0
+		xor     eax, eax
+		vmovdqa ymm1, ymmword ptr [rip + .LCPI1_0]
+.LBB1_4:
+		vpxor   ymm2, ymm1, ymmword ptr [rdi + rax]
+		vpaddq  ymm0, ymm2, ymm0
+		add     rax, 32
+		cmp     rsi, rax
+		jne     .LBB1_4
+		jmp     .LBB1_2
+.LBB1_1:
+		vpxor   xmm0, xmm0, xmm0
+.LBB1_2:
+		vextracti128    xmm1, ymm0, 1
+		vpaddq  xmm0, xmm1, xmm0
+		vpshufd xmm1, xmm0, 238
+		vpaddq  xmm0, xmm0, xmm1
+		vmovq   rax, xmm0
+		vzeroupper
+		ret
+
+sum_u64x4_scalar:
+		mov     rax, qword ptr [rdi + 8]
+		add     rax, qword ptr [rdi + 16]
+		add     rax, qword ptr [rdi + 24]
+		add     rax, qword ptr [rdi]
+		ret
+
+sum_u64x4_icx:
+		vmovdqa xmm0, xmmword ptr [rdi + 16]
+		vpaddq  xmm0, xmm0, xmmword ptr [rdi]
+		vpshufd xmm1, xmm0, 238
+		vpaddq  xmm0, xmm0, xmm1
+		vmovq   rax, xmm0
+		ret
+
+example::main::he27277a11553942e:
+		mov     rax, qword ptr [rip + __rust_no_alloc_shim_is_unstable@GOTPCREL]
+		movzx   eax, byte ptr [rax]
+		ret
 ```
 
 # ⏩🚀 Hashing Performance
 This is tested with i5-9300H CPU. The speed will be different from different CPUs.
 ## 🥟 8-bit (small) hash
-| CPU      | Bench name    | Time      |
-|----------|---------------|-----------|
-| i5-9300H | mul_hash_8    | 1.3250 ns |
-|          | djb2_hash_8   | 1.7282 ns |
-|          | vast_hash_8   | 1.2172 ns |
-|          | fnv_1a_hash_8 | 1.9730 ns |
+| CPU      | Bench name       | Time (ps/ns/µs/ms/s) |
+|----------|------------------|---------------------|
+| i5-9300H | mul_hash_impl_8  | 1.3460 ns           |
+|          | djb2_hash_8      | 2.1672 ns           |
+|          | vast_hash_impl_8 | 1.2216 ns           |
+|          | fnv_1a_hash_8    | 2.1814 ns           |
+
 ## 🍔 256-bit (standard) hash
-| CPU      | Bench name      | Time      |
-|----------|-----------------|-----------|
-| i5-9300H | mul_hash_256    | 1.3226 ns |
-|          | djb2_hash_256   | 6.6162 ns |
-|          | vast_hash_256   | 1.2161 ns |
-|          | fnv_1a_hash_256 | 6.7366 ns |
+| CPU      | Bench name      | Time (ps/ns/µs/ms/s) |
+|----------|-----------------|---------------------|
+| i5-9300H | mul_hash_256    | 1.4054 ns           |
+|          | djb2_hash_256   | 7.1315 ns           |
+|          | vast_hash_256   | 1.2279 ns           |
+|          | fnv_1a_hash_256 | 7.1302 ns           |
+
+## 🍉 1 MiB (MP3) hash
+| CPU      | Bench name       | Time (ps/ns/µs/ms/s) |
+|----------|------------------|----------------------|
+| i5-9300H | mul_hash_1mib    | 45.410 µs            |
+|          | djb2_hash_1mib   | 585.40 µs            |
+|          | vast_hash_1mib   | 27.485 µs            |
+|          | fnv_1a_hash_1mib | 1.0350 ms            |
+
+## 📄 Miscellaneous
+| CPU      | Bench name       | Time (ps/ns/µs/ms/s) |
+|----------|------------------|----------------------|
+| i5-9300H | sum_u64x4_scalar | 247.53 ps            |
+|          | sum_u64x4_icx    | 247.68 ps            |
 
 Running command:
 ```py
