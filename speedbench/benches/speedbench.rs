@@ -15,12 +15,17 @@ fn djb2_hash(input_bytes: &[u8]) -> u32 {
 	hash_value
 }
 
-fn shift_xor_add_impl(input_data: u64x4) -> u64x4 {
-	let ls_dat = input_data << u64x4::splat(31);
-	let hash_256_a = ls_dat ^ u64x4::from_array([10449833687391262720, 12708638996869552128, 12083284059032971264, 5098133568216696832]);
-	let rs_dat = input_data >> u64x4::splat(24);
-	let hash_256_b = rs_dat ^ u64x4::from_array([9858113524293627904, 2849775663957600256, 12247827806936932352, 1651210329918801920]);
-	hash_256_a + hash_256_b
+fn vast_hash_impl(input_data: u64x4) -> u64x4 {
+	input_data ^ u64x4::from_array([6205865627071447409, 2067898264094941423, 1954899363002243873, 9928278621127670147])
+}
+
+fn fnv_1a_hash(data: &[u8]) -> u64 {
+	let mut hash = 0xCBF29CE484222325;
+	for byte in data.iter() {
+		hash ^= *byte as u64;
+		hash *= 0x00000100_000001B3;
+	}
+	hash
 }
 
 fn bench_mul_hash_8(c: &mut Criterion) {
@@ -33,9 +38,14 @@ fn bench_djb2_hash_8(c: &mut Criterion) {
 	c.bench_function("djb2_hash_8", |b| b.iter(|| djb2_hash(black_box(input_data))));
 }
 
-fn bench_shift_xor_add_hash_8(c: &mut Criterion) {
+fn bench_vast_hash_8(c: &mut Criterion) {
 	let input_data = u64x4::from_array([123, 0, 0, 0]);
-	c.bench_function("shift_xor_add_hash_8", |b| b.iter(|| shift_xor_add_impl(black_box(input_data))));
+	c.bench_function("vast_hash_8", |b| b.iter(|| vast_hash_impl(black_box(input_data))));
+}
+
+fn bench_fnv_1a_hash_8(c: &mut Criterion) {
+	let input_data = &[123];
+	c.bench_function("fnv_1a_hash_8", |b| b.iter(|| fnv_1a_hash(black_box(input_data))));
 }
 
 fn bench_mul_hash_256(c: &mut Criterion) {
@@ -53,14 +63,25 @@ fn bench_djb2_hash_256(c: &mut Criterion) {
 	c.bench_function("djb2_hash_256", |b| b.iter(|| djb2_hash(black_box(input_data))));
 }
 
-fn bench_shift_xor_add_hash_256(c: &mut Criterion) {
+fn bench_vast_hash_256(c: &mut Criterion) {
 	let input_data = u64x4::splat(0x123456789abcdef0);
-	c.bench_function("shift_xor_add_hash_256", |b| b.iter(|| shift_xor_add_impl(black_box(input_data))));
+	c.bench_function("vast_hash_256", |b| b.iter(|| vast_hash_impl(black_box(input_data))));
 }
+
+fn bench_fnv_1a_hash_256(c: &mut Criterion) {
+	let input_data = &[
+		140, 91, 171, 62,
+		140, 91, 171, 62,
+		140, 91, 171, 62,
+		140, 91, 171, 62
+	];
+	c.bench_function("fnv_1a_hash_256", |b| b.iter(|| fnv_1a_hash(black_box(input_data))));
+}
+
 
 criterion_group!(
 	benches,
-	bench_mul_hash_8, bench_djb2_hash_8, bench_shift_xor_add_hash_8,
-	bench_mul_hash_256, bench_djb2_hash_256, bench_shift_xor_add_hash_256,
+	bench_mul_hash_8, bench_djb2_hash_8, bench_vast_hash_8, bench_fnv_1a_hash_8,
+	bench_mul_hash_256, bench_djb2_hash_256, bench_vast_hash_256, bench_fnv_1a_hash_256
 );
 criterion_main!(benches);
