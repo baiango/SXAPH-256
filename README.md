@@ -3,11 +3,11 @@ Previously named `SXAPH-256 - Shift XOR Add Prime Hash 256-Bit`.
 
 VastHash is a non-cryptographic experimental hash function designed for prime-sized HashMap to minimize memory accesses and maximize the performance on AVX2 systems while having distribution comparable to multiplication-based hash.
 
-VastHash is trained on passwords for prime-sized HashMap. So, it'll perform much worse on non-prime-sized HashMap.
+VastHash is evaluated on passwords for prime-sized HashMap. So, it'll perform much worse on non-prime-sized HashMap and possibly on other data.
 
-It's made from brute-forcing every combination of operators `|, &, <<, >>, ^, and +`. I found claims online, that `| and &` reduces hash distribution and `~` doesn't improve. But, I wasn't able to get consistently reduced hash distribution result in these claims. Still, they're not our best performers on the list. The Rust compiler will replace `-` (vpsubq) with `+` (vpaddq) so that's excluded from the trainer.
+It's made from brute-forcing every combination of operators `|, &, <<, >>, ^, and +`. I found claims online, that `| and &` reduces hash distribution and `~` doesn't improve. But, I wasn't able to get consistently reduced hash distribution result in these claims. Still, they're not our best performers on the list. The Rust compiler will replace `-` (vpsubq) with `+` (vpaddq) so that's excluded from the evaluator.
 
-`hash_256_a`, and `hash_256_b` from VastHash are trained with SymPy PRNG (sympy.randprime), then run through the Chi² test with the password 500 times, and filter out the best result. Yet, constants were manually picked due to how the hash function wasn't able to generalize outside its test.
+`hash_256_a`, and `hash_256_b` from VastHash are generated with SymPy PRNG (sympy.randprime), then run through the Chi² test with the password 500 times, and filter out the best result. Yet, constants were manually picked due to how the hash function wasn't able to generalize outside its test.
 
 The Chi² test is vulnerable to guided optimization framework like Bayesian optimization from [Optuna](https://optuna.org/), but multiple bucket sizes are used to improve the hash's ability to generalize over different sized array; it's done on all system cores to ensure maximum core utilization.
 
@@ -152,7 +152,7 @@ def mul_hash(input_data, hash_256=np.array([140, 91, 171, 62], dtype=np.uint64))
 ```
 
 ## 🧮 Prime benchmark
-ℹ️ Disclosure: `vast_hash` were trained on the [BruteX_password.list](https://weakpass.com/wordlist/1902) and [11, 13, 17, 19] bucket sizes.  
+ℹ️ Disclosure: `vast_hash` were evaluated on the [BruteX_password.list](https://weakpass.com/wordlist/1902) and `[11, 13, 17, 19]` bucket sizes.  
 
 ### Bucket sizes = `[11, 13, 17, 19]`  
 Hash file = [conficker.txt](https://weakpass.com/wordlist/60)  
