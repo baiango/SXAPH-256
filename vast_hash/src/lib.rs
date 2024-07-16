@@ -11,8 +11,8 @@ pub fn mul_hash_impl(input_data: u64x4) -> u64x4 {
 
 pub fn mul_hash(input_data: &[u64x4]) -> u64 {
 	let mut hash = u64x4::splat(0);
-	for dat in input_data.iter() {
-		hash += mul_hash_impl(*dat);
+	for i in 0..input_data.len() {
+		hash += mul_hash_impl(input_data[i]);
 	}
 	sum_u64x4_icx(hash)
 }
@@ -32,8 +32,8 @@ pub fn vast_hash_impl(input_data: u64x4) -> u64x4 {
 
 pub fn vast_hash(input_data: &[u64x4]) -> u64 {
 	let mut hash = u64x4::splat(0);
-	for dat in input_data.iter() {
-		hash += vast_hash_impl(*dat);
+	for i in 0..input_data.len() {
+		hash += vast_hash_impl(input_data[i]);
 	}
 	sum_u64x4_icx(hash)
 }

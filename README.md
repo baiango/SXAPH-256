@@ -184,20 +184,20 @@ This is tested with i5-9300H CPU. The speed will be different from different CPU
 |          | fnv_1a_hash_8    | 2.1814 ns           |
 
 ## 🍔 256-bit (standard) hash
-| CPU      | Bench name      | Time (ps/ns/µs/ms/s) |
-|----------|-----------------|-----------------------|
-| i5-9300H | mul_hash_impl_256 | 1.4054 ns           |
-|          | djb2_hash_256   | 7.1315 ns             |
-|          | vast_hash_impl_256 | 1.2279 ns          |
-|          | fnv_1a_hash_256 | 7.1302 ns             |
+| CPU      | Bench name         | Time (ps/ns/µs/ms/s) |
+|----------|--------------------|----------------------|
+| i5-9300H | mul_hash_impl_256  | 1.4054 ns            |
+|          | djb2_hash_256      | 7.1315 ns            |
+|          | vast_hash_impl_256 | 1.2279 ns            |
+|          | fnv_1a_hash_256    | 7.1302 ns            |
 
 ## 🍉 1 MiB (MP3) hash
 | CPU      | Bench name       | Time (ps/ns/µs/ms/s) |
 |----------|------------------|----------------------|
-| i5-9300H | mul_hash_1mib    | 45.410 µs            |
-|          | djb2_hash_1mib   | 585.40 µs            |
-|          | vast_hash_1mib   | 27.485 µs            |
-|          | fnv_1a_hash_1mib | 1.0350 ms            |
+| i5-9300H | mul_hash_1mib    | 44.530 µs            |
+|          | djb2_hash_1mib   | 587.82 µs            |
+|          | vast_hash_1mib   | 23.368 µs            |
+|          | fnv_1a_hash_1mib | 1.0407 ms            |
 
 ## 📄 Miscellaneous
 | CPU      | Bench name       | Time (ps/ns/µs/ms/s) |
