@@ -109,7 +109,7 @@ pub fn main() {
 ```
 ## 🍪 ASM output from Rust port
 ```asm
-.LCPI0_0: // XOR constants
+.LCPI0_0: ; XOR constants
 		.quad   6205865627071447409
 		.quad   2067898264094941423
 		.quad   1954899363002243873
@@ -117,12 +117,12 @@ pub fn main() {
 vast_hash_impl:
 		mov     rax, rdi
 		vmovaps ymm0, ymmword ptr [rsi]
-		vxorps  ymm0, ymm0, ymmword ptr [rip + .LCPI0_0] // XOR
+		vxorps  ymm0, ymm0, ymmword ptr [rip + .LCPI0_0] ; XOR
 		vmovaps ymmword ptr [rdi], ymm0
 		vzeroupper
 		ret
 
-.LCPI1_0: // XOR constants
+.LCPI1_0: ; XOR constants
 		.quad   6205865627071447409
 		.quad   2067898264094941423
 		.quad   1954899363002243873
