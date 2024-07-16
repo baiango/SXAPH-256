@@ -43,7 +43,7 @@ assert vast_hash_impl(np.array([123, 123, 123, 123], dtype=np.uint64)).all() == 
 assert vast_hash(np.array([[123, 123, 123, 123], [123, 123, 123, 123]], dtype=np.uint64)) == 3420395603173502432
 ```
 
-## 🔩 [Rust port](https://godbolt.org/#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAMzwBtMA7AQwFtMQByARg9KtQYEAysib0QXACx8BBAKoBnTAAUAHpwAMvAFYTStJg1DEArgoKkl9ZATwDKjdAGFUtEywYgATKUcAZPAZMADl3ACNMYhAANi5SAAdUBUI7Bhc3D28EpJSBAKDQlgio2MtMa1sBIQImYgJ09084q0wbVOragnyQ8Mi9c06GzOaauu7C4okASktUE2Jkdg4AUi8AZjAwZYBWACEqTCYCecwIRLqmMPoAfWSWdCmdgBFljQBBM0wAanN0EBA7n8QCZopJVJJlmtdq8PkofgQgbVkEgQKoABzRa6g/7LADsu2uLBY11oqCY6BMtzwXC8aNIX0JxPJ6GumHieFB9MZtwQJioVBubLwax8DKJ12QADcCMkaWiqaC8S8oTDPvCgWwWJDoe8Yas1jtdgxUITDMB6M89etDYFaIFMM8vgB6J1fABKmApiwUXwMBEYyAAnjD4iYwl8qAwvpKmOZrghYwhrngWPFaBBAqGCNd0EcmCAviCwZIpl8ALSQ7CF0Hgr54nVvV4ATkzJmzuZqde2VaL4P%2BVGIqCZxGITEDEEN0S8Gm2GO2U9xGlxUkkuMkGib9On0VxaKbaK8oI3kibkik63pXCb20ke6ba2iaw0Gi8XkkazRuLW9KbTdpXl3KcuBpXEdw0KRcWeR5dVxF5dV1a09mNU0jAtbY4LeUNw0jaNY2zBMFAQDMGCzHM8wLVZokNXsIXQ0sKzWHtQTrfE9Q3egCC%2BFg2y%2BAiEDrNYnmrYt/gUNMjggDRHhVeCm34Ygvg7L5AmUki2zImoADpCEiCBS3rNim2bPi6y8aFBNwuM%2BOTVN0wAKg7aSG2bJVDIUdxrho5NkFUCA%2BOgxtYLYxtEKNE0WDNNCMKwiMo3c4kvIUUQDGICBAQLGj6MrYSWOc9jME42ooi7XYi21L5aKEyEhJMBgFCYA5cvVf5NX%2BAhRzq7j/TSlMHhY5U8qbIrDQ0Z5NIAd1HeJ2SMa5mQgYa9i4MbJqYabAmAOb0HQBaR0NLwoImqaZs2%2BbFt2A06IC1z4JCy6wpQ80HXQq17tte1HRdL4hFYb4xMwT0vljL4CAQP7ktqaNImSAQQzDWKfg8ry8B8nr7gymsS3LbKi1ywyOKBkcKL2MqoQqx1qsLOqGu%2BesuMwFg2o6hQutOQF9KCmTG3yzjJS4ASaupxq6e5UlyUpWVaV24hNNja54navSgZ9Oy0Dqzjrg5gb8YK6MvAFqn6uF/ExWJMWKSpOUoCK2WFHlxWpll7aIC8KZS2B1WBHMBkte1HXebWA3aqN2mTe5ZlWXZUEID5%2BlJVd/q/dkgnJUkIOhdD3ZTZ5PkBUwSPhS8GPvy%2BDQwmArhwOAqTE7Jr7i/pfb6RL0VLqea6eejbZ05Dprw%2B2gvo8lEvU99rnm2Dmm%2B/FKUZWpWkFUkGPtndn1cZuwKMLh7CowiwIlYM2S6a%2BmMrMTGy00M5sCdbds8yDzHRPEggIBpNYnKvzviEwdzaE4ynT74XPimNMxFSIdiYB/I%2BG5YxKDqKyAAjpsCA39f4WGEn2EAA4hxzRHGOCcewpwzjnAuJcK4vwaGiFuShu59yHnXKeU8XA1gikvNeW8v4HxPhfG%2BNY94NA/j/AeQCXhgIATAvQqCUDuZGSCibE%2BeF4yJk/k2G%2Bak76dgAa0TY1FH4Amfq/dYMwMGSCfn6Qx79LTjw3NfXWqCTB/wNoApRhEJyHlvhpSBScZHNlgZEbMmAkGQHsX/Zukhpx8PnBoNYXAvzbBfO%2BV23iXJyKzl9eKnlMbeVUCogmgIH4iSwYOYco5xyGjiF8Vu9JKrSJcjAhQcCAlBLSkjLJKNfLs3pBkxKENUrs1qdA1Rut8mUxov2YpuDSkEN2NsekVCvi4npGiKCySbH1MaYg5B3S2mo06YjBKWSkpiFqGjB4AyfGdxGRZMZ%2BjzFSVWUZdZ/jNmQG2cWbJpzjFvPBLcXpnzzl1KGZxK5NU9FiXMUWf4ABZN4AANAZjyhoNOeYErZrT3ntM%2BV09FPyjkpX%2BQ8jeSoOAzFoJwbYvBPDcF4KgTgbozDArmAsWm6weCkAIJoElMwADWIBthNk0hEqc0QDxNkoW%2BKhZKOCSEpZy0gtKOC8AUCAARHKOBaBmHAWASA0CpjoJEcglBdXsnoFEBgeBgAIAILQQMfA6D%2BmIMqiAYQ5VhECLUQMnA2VuuYMQQMAB5MI2hWhqrZbqtggh/UMBtXKrAYQTDACcGIWgyrqWkCwBFVCSwtDprwN/Nokof5yswKoVobZs28ECP6KVOa7RhFHH6lwWAvW8HaimFtpBC3EDCEkTATwGaRQ2pymYAomDAAUAANTwJgca/r4iMA7fwQQIgxDsCkDIQQigVDqHVToPQBgjAgFMOYfQeAwjKsgDMVACtUiprLE4L416CBlnoIW2g1V9b3pBrUYABUywHCOCcaqqxdhMElKoLwNKu3EDwFgC9ekygVFSA4BgzhXCND0P4e0Ew%2BhxESMkSoaR0PDGyAR1I4xehRGaOUEN7RRj1GI00RDtGqj0Yo0UXDlh6NDCYwMMY2HKPTFmPMRYQmpUUtIFSnNCqvjHoIMgL45rLXWsDF8CAuBCAkFMjEqYrbh2kD8iAOYBAsyGogMa/VxBgi/U4OiaIZZmLAGQApqQmk2Wek0zBv4cQl3CGSmu6Qvmt1qDlboOIq14gttJeS2Vu75WcH9W2LMj6qCyYZQppTVqbVqZcHq012muC6fZcOnlIB1yaVxE2R8X5YkbjWLiG8%2BhOAytIIzSuAipM0s4EqlVxXd1uyaxwSDkm5UKr0/1mYXaYaeEkEAA)
+## 🔩 [Rust port](https://godbolt.org/#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAMzwBtMA7AQwFtMQByARg9KtQYEAysib0QXACx8BBAKoBnTAAUAHpwAMvAFYTStJg1DEArgoKkl9ZATwDKjdAGFUtEywYgATKUcAZPAZMADl3ACNMYhAANi5SAAdUBUI7Bhc3D28EpJSBAKDQlgio2MtMa1sBIQImYgJ09084q0wbVOragnyQ8Mi9c06GzOaauu7C4okASktUE2Jkdg4AUi8AZjAwZYBWACEqTCYCecwIRLqmMPoAfWSWdCmdgBFljQBBM0wAanN0EBA7n8QCZopJVJJlmtdq8PkofgQgbVkEgQKoABzRa6g/7LADsu2uLBY11oqCY6BMtzwXC8aNIX0JxPJ6GumHieFB9MZtwQJioVBubLwax8DKJ12QADcCMkaWiqaC8S8oTDPvCgWwWJDoe8Yas1jtdgxUITDMB6M89etDYFaIFMM8vgB6J1fABKmApiwUXwMBEYyAAnjD4iYwl8qAwvpKmOZrghYwhrngWPFaBBAqGCNd0EcmCAviCwZIpl8ALSQ7CF0Hgr54nVvV4ATkzJmzuZqde2VaL4P%2BVGIqCZxGITEDEEN0S8Gm2GO2U9xGlxUkkuMkGib9On0VxaKbaK8oI3kibkik63pXCb20ke6ba2iaw0Gi8XkkazRuLW9KbTdpXl3KcuBpXEdw0KRcWeR5dVxF5dV1a09mNU0jAtbY4LeUNw0jaNY2zBMFAQDMGCzHM8wLVZokNXsIXQ0sKzWHtQTrfE9Q3egCC%2BFg2y%2BAiEDrNYnmrYt/gUNMjggDRHhVeCm34YgvjwRSow0AA6VTW3bPNVPoBgIFLes2KbZs%2BLrLxoUE3C4z45NU3TTSyJqG0oO1IylSMhR3GuGjk2QVQID46DG1gtjG0Qo0TRYM00IwrCIyjTziR8hRRAMYgIEBAsaPoythJYhtmw4r5aiiLtdiLbUvlooTISEkwGAUJgDny9V/k1f4CFHBruP9DKUweFjlQKjcSsNDRnlUgB3Ud4nZIxrmZCBRr2LgJumphZsCYAFvQdAlpHQ0vCgqaZrm7bFuW3YDTooL3PgsLroilDzQddCrUe217UdF0viEVhvjEzBPWKn0CAQAHUtqaNImSAQQzDeKfi8ny8D8vr7iymsS3LXKi3yoyipKii9gqqEqsdWrCwaprvnrLjMBYDquoUHrTkBAyQpkxt2MwTjJS4AS6up5q6e5UlyUpWVaX24hVNja54k6/SQa%2BAAqNAGs464OaGgneejLxBapxqRfxMViXFikqTlKASrlhQFaVqY5d2iAvCmUtYzVjXzAZHXXNkorJTWI36pN2mze5ZlWXZUEIH5%2BlJXdwaA%2B5psg8kUPhYj3ZzZ5PkBUwGPhS8ePvy%2BDQwmArhwOAqSU7Jn6y/pQ76XL0VrqeW6eb57Ys/Dlqo924u4%2BDxPsfcrnmzDmnB/FKUZWpWkFUkePtk9n08bu4KMPh7CoyiwJlcM2S6Z%2BmNrMTWy0zcnvlNIjsmFDrHRPEggIBpNZpOG4y7%2BITBPK0E4pTC%2B%2BEr4pjTMRB%2BeZv63ybLGJQdRWQAEdNgQH/oAiwwk%2BwgAHEOBaI4xwTj2FOGcc4FxLhXF%2BDQ0Qtw0N3PuQ865Tyni4GsEUl5ry3l/A%2BJ8L43xrHvBoH8f4DyAS8MBACYEmFQVgafEKZtz54XjImOBRUHKPyNpKVomxqIvwBG/D%2B6wZjYMkK/P0Riv6WinhuQq%2BsMEmCAVo5RfEJyHg0TA1OzZmwIMiNmTAqDIAOKAW3SQ05BHzg0GsLgX5tgvnfO7LxtiFG5x%2BolbyWNfKqDUfrQEz8RK4MHMOUc45DRxC%2BB3ek1U5Fpx8QoRB/jAkZWRpk1G/l2b0nSclSG6V2Y1JyZxPJlMaL9iKQQkpxDdjbHpLQr4uJ6RohcjY3%2B8D6l%2BJQWgrprS0YdKRklTJKUxC1HRg8fpp875DMsiMgxFipJJJWb4pBATNktOLFkk5JitlvMOWlD5ZzakXP6vknBYkLFFn%2BAAWTeAADTOQ8tZTymlfPBO83ZyLJC3B6X8%2B528lQcBmLQTg2xeCeG4LwVAnA3RmEGXMBYtN1g8FIAQTQ%2BKZgAGsQDbCbKpcJU5ogHibDQt8tDCUcEkCSllpAKUcF4AoEAwjmUcC0DMOAsAkBoFTHQSI5BKAavZPQKIDA8DAAQAQWggY%2BB0H9MQOVEAwiSrCIEWogZOCMsdcwYggYADyYRtCtEVYyjVbBBBeoYOayVWAwgmGAE4MQtA5VktIFgKKqElhaCTXgf%2BbRtEJvTZgVQrQ2xpt4IEf0or012jCKOT1LgsCut4J1FM9bSDaOIGEJImAngM2iltFlMwBRMGAAoAAangTAk0vXxEYM2/gggRBiHYFIGQghFAqHUEqnQegDBGBAKYcw%2Bg8BhDlZAGYqBFapATWWJwXwz0EDLPQbRtBaqGyvV8UYwBeZlgOEcE4tVVi7CYJKVQXhyWtuIHgLAx79JlAqKkBwDBnCuEaBIeZ/h7QTD6GseZiRkiVDSEh4Y2Gch4fGL0KIWGYP%2BvaKMeoBGmjzJaG0KoNHSNFEwwxmjQx6OWBY%2BhsjIAsMzAULSxY0x9BEolRuqVnAvh7oIMgL4RqTVmsDF8CAuBCAkDMtEqYDa%2B2kACiAOYBAsw6ogHqrVxBgj/U4OiaIZZmLAGQApqQqlGWek0%2BBv4cRZ3CFSou6QvnV1qElboOI614j1oJRJ0gpL03Sq9W2LMN6qCyepQppTprzVqZcJqg12muC6aZX29lIB1yqVxE2R8X4YkbiwzecTYreCMxrsIuL5LOCyvlcVjdHtGsgdi5K6VeneszFbbDTwkggA%3D%3D)
 ```rs
 #![feature(portable_simd)]
 use std::simd::u64x4;
@@ -59,8 +59,8 @@ pub fn vast_hash_impl(input_data: u64x4) -> u64x4 {
 #[no_mangle]
 pub fn vast_hash(input_data: &[u64x4]) -> u64 {
 	let mut hash = u64x4::splat(0);
-	for dat in input_data.iter() {
-		hash += vast_hash_impl(*dat);
+	for i in 0..input_data.len() {
+		hash += vast_hash_impl(input_data[i]);
 	}
 	sum_u64x4_icx(hash)
 }
@@ -109,7 +109,7 @@ pub fn main() {
 ```
 ## 🍪 ASM output from Rust port
 ```asm
-.LCPI0_0:
+.LCPI0_0: // XOR constants
 		.quad   6205865627071447409
 		.quad   2067898264094941423
 		.quad   1954899363002243873
@@ -117,33 +117,63 @@ pub fn main() {
 vast_hash_impl:
 		mov     rax, rdi
 		vmovaps ymm0, ymmword ptr [rsi]
-		vxorps  ymm0, ymm0, ymmword ptr [rip + .LCPI0_0]
+		vxorps  ymm0, ymm0, ymmword ptr [rip + .LCPI0_0] // XOR
 		vmovaps ymmword ptr [rdi], ymm0
 		vzeroupper
 		ret
 
-.LCPI1_0:
+.LCPI1_0: // XOR constants
 		.quad   6205865627071447409
 		.quad   2067898264094941423
 		.quad   1954899363002243873
 		.quad   -8518465452581881469
 vast_hash:
 		test    rsi, rsi ; if input_data.len() == 0
-		je      .LBB1_1 ; Return u64x4::splat(0)
-		shl     rsi, 5 ; input_data.len() * 32
-		vpxor   xmm0, xmm0, xmm0 ; hash = u64x4::splat(0)
-		xor     eax, eax ; `dat` in input_data
-		vmovdqa ymm1, ymmword ptr [rip + .LCPI1_0] ; XOR constants
-.LBB1_4:
-		vpxor   ymm2, ymm1, ymmword ptr [rdi + rax] ; Position of input_data
-		vpaddq  ymm0, ymm2, ymm0 ; Add to `hash`
-		add     rax, 32 ; Current index
-		cmp     rsi, rax ; Check if finished
-		jne     .LBB1_4 ; Loop back
-		jmp     .LBB1_2 ; Return block
+		je      .LBB1_1 ; jump to return
+		mov     eax, esi
+		and     eax, 3
+		cmp     rsi, 4
+		jae     .LBB1_8
+		vpxor   xmm0, xmm0, xmm0 ; u64x4::splat(0);
+		xor     ecx, ecx ; 0
+		jmp     .LBB1_5
 .LBB1_1:
-		vpxor   xmm0, xmm0, xmm0 ; hash = u64x4::splat(0)
-.LBB1_2: ; `sum_u64x4_icx()` inlined
+		vpxor   xmm0, xmm0, xmm0 ; u64x4::splat(0);
+		jmp     .LBB1_2
+.LBB1_8: ; Preparing the constants
+		and     rsi, -4
+		lea     rdx, [rdi + 96] ; Length of constants
+		vpxor   xmm0, xmm0, xmm0 ; u64x4::splat(0);
+		xor     ecx, ecx ; 0
+		vmovdqa ymm1, ymmword ptr [rip + .LCPI1_0]
+.LBB1_9: ; Unrolled `vast_hash_impl` or XORs
+		vpxor   ymm2, ymm1, ymmword ptr [rdx - 96]
+		vpaddq  ymm0, ymm2, ymm0
+		vpxor   ymm2, ymm1, ymmword ptr [rdx - 64]
+		vpxor   ymm3, ymm1, ymmword ptr [rdx - 32]
+		vpaddq  ymm2, ymm3, ymm2
+		vpaddq  ymm0, ymm2, ymm0
+		vpxor   ymm2, ymm1, ymmword ptr [rdx]
+		add     rcx, 4
+		vpaddq  ymm0, ymm2, ymm0
+		sub     rdx, -128
+		cmp     rsi, rcx
+		jne     .LBB1_9
+.LBB1_5:
+		test    rax, rax ; If end of `input_data`
+		je      .LBB1_2 ; Convert and return `hash` as u64
+		shl     rcx, 5
+		add     rdi, rcx
+		shl     eax, 5
+		xor     ecx, ecx
+		vmovdqa ymm1, ymmword ptr [rip + .LCPI1_0]
+.LBB1_7:
+		vpxor   ymm2, ymm1, ymmword ptr [rdi + rcx]
+		vpaddq  ymm0, ymm2, ymm0
+		add     rcx, 32
+		cmp     rax, rcx
+		jne     .LBB1_7
+.LBB1_2: ; `sum_u64x4_icx` inlined; convert and return `hash` as u64
 		vextracti128    xmm1, ymm0, 1
 		vpaddq  xmm0, xmm1, xmm0
 		vpshufd xmm1, xmm0, 238
