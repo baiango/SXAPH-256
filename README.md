@@ -134,16 +134,16 @@ vast_hash:
 		and     eax, 3
 		cmp     rsi, 4
 		jae     .LBB1_8
-		vpxor   xmm0, xmm0, xmm0 ; u64x4::splat(0);
+		vpxor   xmm0, xmm0, xmm0 ; set to 0 in 128-bit
 		xor     ecx, ecx ; 0
 		jmp     .LBB1_5
 .LBB1_1:
-		vpxor   xmm0, xmm0, xmm0 ; u64x4::splat(0);
+		vpxor   xmm0, xmm0, xmm0 ; set to 0 in 128-bit
 		jmp     .LBB1_2
 .LBB1_8: ; Preparing the constants
 		and     rsi, -4
 		lea     rdx, [rdi + 96] ; Length of constants
-		vpxor   xmm0, xmm0, xmm0 ; u64x4::splat(0);
+		vpxor   xmm0, xmm0, xmm0 ; set to 0 in 128-bit
 		xor     ecx, ecx ; 0
 		vmovdqa ymm1, ymmword ptr [rip + .LCPI1_0]
 .LBB1_9: ; Unrolled `vast_hash_impl` or XORs
